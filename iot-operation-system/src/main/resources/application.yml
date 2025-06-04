@@ -1,0 +1,37 @@
+server:
+  port: 8181
+
+spring:
+  application:
+    name: iot-operation-system
+  cloud:
+    nacos:
+      username: @nacos.username@
+      password: @nacos.password@
+      discovery:
+        server-addr: @nacos.server-addr@
+        namespace: @nacos.namespace@
+        group: @nacos.group@
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        group: ${spring.cloud.nacos.discovery.group}
+  config:
+    import:
+      - optional:nacos:datasource.yaml
+      - optional:nacos:common.yaml
+  mqtt:
+    host: tcp://localhost:1883
+    username: maku
+    password: maku
+    clientId: maku_boot_service_dev
+    default-topic: topic_default
+
+storage:
+  enabled: true
+  config:
+    # 存储类型：local、aliyun、tencent、qiniu、huawei、minio
+    type: local
+    domain: http://localhost:8080
+  local:
+    path: D://upload

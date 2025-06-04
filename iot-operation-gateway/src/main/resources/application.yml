@@ -1,0 +1,64 @@
+server:
+  port: 8180
+
+spring:
+  application:
+    name: iot-operation-gateway
+  cloud:
+    gateway:
+      metrics:
+        enabled: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: iot-operation-system
+          uri: lb://iot-operation-system
+          order: 999999
+          predicates:
+            - Path=/**
+        - id: iot-operation-new
+          uri: lb://iot-operation-new
+          order: 1
+          predicates:
+            - Path=/new/**
+          filters:
+            - StripPrefix=1
+    nacos:
+      username: @nacos.username@
+      password: @nacos.password@
+      discovery:
+        server-addr: @nacos.server-addr@
+        namespace: @nacos.namespace@
+        group: @nacos.group@
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        group: ${spring.cloud.nacos.discovery.group}
+  config:
+    import:
+      - optional:nacos:datasource.yaml
+      - optional:nacos:common.yaml
+
+
+
+knife4j:
+  # 聚合swagger文档
+  gateway:
+    enabled: true
+    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组
+    strategy: discover
+    discover:
+      enabled: true
+      version : openapi3
+
+
+---
+
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
