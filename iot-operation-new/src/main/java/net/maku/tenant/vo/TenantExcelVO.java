@@ -41,9 +41,6 @@ public class TenantExcelVO implements TransPojo {
 	@ExcelProperty("手机号")
 	private String mobile;
 
-	@ExcelProperty("机构ID")
-	private Long orgId;
-
 	@ExcelProperty("超级管理员   0：否   1：是")
 	private String superAdminLabel;
 
@@ -57,8 +54,5 @@ public class TenantExcelVO implements TransPojo {
 	@ExcelIgnore
 	@Trans(type = TransType.DICTIONARY, key = "user_status", ref = "statusLabel")
 	private Integer status;
-
-	@ExcelProperty("租户ID")
-	private Long tenantId;
 
 }

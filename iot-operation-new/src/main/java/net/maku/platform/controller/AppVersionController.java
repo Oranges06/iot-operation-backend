@@ -1,4 +1,4 @@
-package net.maku.tenant.controller;
+package net.maku.platform.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -7,9 +7,9 @@ import net.maku.framework.common.utils.PageResult;
 import net.maku.framework.common.utils.Result;
 import net.maku.framework.operatelog.annotations.OperateLog;
 import net.maku.framework.operatelog.enums.OperateTypeEnum;
-import net.maku.tenant.service.TenantService;
-import net.maku.tenant.query.TenantQuery;
-import net.maku.tenant.vo.TenantVO;
+import net.maku.platform.service.AppVersionService;
+import net.maku.platform.query.AppVersionQuery;
+import net.maku.platform.vo.AppVersionVO;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,23 +17,23 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 /**
- * 用户管理
+ * 版本管理
  *
- * @author cry babamu@126.com
+ * @author 环游 babamu@126.com
  * <a href="https://maku.net">MAKU</a>
  */
 @RestController
-@RequestMapping("/new/tenant")
-@Tag(name="用户管理")
+@RequestMapping("/platform/version")
+@Tag(name="版本管理")
 @AllArgsConstructor
-public class TenantController {
-    private final TenantService tenantService;
+public class AppVersionController {
+    private final AppVersionService appVersionService;
 
     @GetMapping("page")
     @Operation(summary = "分页")
-    @PreAuthorize("hasAuthority('tenant:tenant:page')")
-    public Result<PageResult<TenantVO>> page(@ParameterObject @Valid TenantQuery query){
-        PageResult<TenantVO> page = tenantService.page(query);
+    @PreAuthorize("hasAuthority('platform:version:page')")
+    public Result<PageResult<AppVersionVO>> page(@ParameterObject @Valid AppVersionQuery query){
+        PageResult<AppVersionVO> page = appVersionService.page(query);
 
         return Result.ok(page);
     }
@@ -41,9 +41,9 @@ public class TenantController {
 
     @GetMapping("{id}")
     @Operation(summary = "信息")
-    @PreAuthorize("hasAuthority('tenant:tenant:info')")
-    public Result<TenantVO> get(@PathVariable("id") Long id){
-        TenantVO data = tenantService.get(id);
+    @PreAuthorize("hasAuthority('platform:version:info')")
+    public Result<AppVersionVO> get(@PathVariable("id") Long id){
+        AppVersionVO data = appVersionService.get(id);
 
         return Result.ok(data);
     }
@@ -51,9 +51,9 @@ public class TenantController {
     @PostMapping
     @Operation(summary = "保存")
     @OperateLog(type = OperateTypeEnum.INSERT)
-    @PreAuthorize("hasAuthority('tenant:tenant:save')")
-    public Result<String> save(@RequestBody TenantVO vo){
-        tenantService.save(vo);
+    @PreAuthorize("hasAuthority('platform:version:save')")
+    public Result<String> save(@RequestBody AppVersionVO vo){
+        appVersionService.save(vo);
 
         return Result.ok();
     }
@@ -61,9 +61,9 @@ public class TenantController {
     @PutMapping
     @Operation(summary = "修改")
     @OperateLog(type = OperateTypeEnum.UPDATE)
-    @PreAuthorize("hasAuthority('tenant:tenant:update')")
-    public Result<String> update(@RequestBody @Valid TenantVO vo){
-        tenantService.update(vo);
+    @PreAuthorize("hasAuthority('platform:version:update')")
+    public Result<String> update(@RequestBody @Valid AppVersionVO vo){
+        appVersionService.update(vo);
 
         return Result.ok();
     }
@@ -71,9 +71,9 @@ public class TenantController {
     @DeleteMapping
     @Operation(summary = "删除")
     @OperateLog(type = OperateTypeEnum.DELETE)
-    @PreAuthorize("hasAuthority('tenant:tenant:delete')")
+    @PreAuthorize("hasAuthority('platform:version:delete')")
     public Result<String> delete(@RequestBody List<Long> idList){
-        tenantService.delete(idList);
+        appVersionService.delete(idList);
 
         return Result.ok();
     }
@@ -82,8 +82,8 @@ public class TenantController {
     @GetMapping("export")
     @Operation(summary = "导出")
     @OperateLog(type = OperateTypeEnum.EXPORT)
-    @PreAuthorize("hasAuthority('tenant:tenant:export')")
+    @PreAuthorize("hasAuthority('platform:version:export')")
     public void export() {
-        tenantService.export();
+        appVersionService.export();
     }
 }

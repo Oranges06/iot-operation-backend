@@ -15,8 +15,8 @@ import net.maku.tenant.service.TenantService;
 import com.fhs.trans.service.impl.TransService;
 import net.maku.framework.common.utils.ExcelUtils;
 import net.maku.tenant.vo.TenantExcelVO;
-import net.maku.framework.common.excel.ExcelFinishCallBack;
-import org.springframework.web.multipart.MultipartFile;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import cn.hutool.core.util.ObjectUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,9 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantDao, TenantEntity> 
         wrapper.like(ObjectUtil.isNotEmpty(query.getUsername()), TenantEntity::getUsername, query.getUsername());
         wrapper.like(ObjectUtil.isNotEmpty(query.getRealName()), TenantEntity::getRealName, query.getRealName());
         wrapper.like(ObjectUtil.isNotEmpty(query.getMobile()), TenantEntity::getMobile, query.getMobile());
-
+        wrapper.inSql(TenantEntity::getId,
+                "SELECT user_id FROM sys_user_role WHERE role_id = 5"
+        );
         return wrapper;
     }
 
@@ -60,13 +62,15 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantDao, TenantEntity> 
         return vo;
     }
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void save(TenantVO vo) {
         TenantEntity entity = TenantConvert.INSTANCE.convert(vo);
-
         baseMapper.insert(entity);
+        Long tenantId = entity.getId();
 
+        baseMapper.insertRoleForTenant(tenantId);
 
     }
 
@@ -92,6 +96,7 @@ public class TenantServiceImpl extends BaseServiceImpl<TenantDao, TenantEntity> 
     public void export() {
     List<TenantExcelVO> excelList = TenantConvert.INSTANCE.convertExcelList(list());
         transService.transBatch(excelList);
-        ExcelUtils.excelExport(TenantExcelVO.class, "用户管理", null, excelList);
+        ExcelUtils.excelExport(TenantExcelVO.class, "租户管理", null, excelList);
     }
+
 }
