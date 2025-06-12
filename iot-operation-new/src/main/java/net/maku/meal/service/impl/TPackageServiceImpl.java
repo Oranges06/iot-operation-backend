@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import net.maku.meal.entity.TPackageDeviceEntity;
 import net.maku.meal.service.TPackageDeviceService;
 import net.maku.meal.convert.TPackageDeviceConvert;
@@ -162,6 +165,13 @@ public class TPackageServiceImpl extends BaseServiceImpl<TPackageDao, TPackageEn
         }
         transService.transBatch(excelList);
         ExcelUtils.excelExport(TPackageExcelVO.class, "套餐管理", null, excelList);
+    }
+
+    @Override
+    public Map<Integer, String> getPackageNameList() {
+        return baseMapper.selectList(null).stream()
+                .filter(pkg -> pkg.getId() != null && pkg.getName() != null)
+                .collect(Collectors.toMap(TPackageEntity::getId,TPackageEntity::getName));
     }
 
 }

@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 套餐管理
@@ -85,5 +86,11 @@ public class TPackageController {
     @PreAuthorize("hasAuthority('meal:package:export')")
     public void export() {
         tPackageService.export();
+    }
+
+    @GetMapping("nameList")
+    @Operation(summary = "套餐名列表")
+    public Result<Map<Integer,String>> getNameList(){
+        return Result.ok(tPackageService.getPackageNameList());
     }
 }
