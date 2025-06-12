@@ -6,6 +6,7 @@ import net.maku.meal.vo.TPackageVO;
 import net.maku.meal.query.TPackageQuery;
 import net.maku.meal.entity.TPackageEntity;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 套餐管理
@@ -26,6 +27,7 @@ public interface TPackageService extends BaseService<TPackageEntity> {
 
     void delete(List<Long> idList);
 
+    Map<Integer,String> getPackageNameList();
 
     void export();
 }
